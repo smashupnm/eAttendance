@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="UPNM QR Kehadiran (Mobile)">
+    <title>SMASH QR Kehadiran (Mobile)</title>
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <link rel="shortcut icon" href="assets/LOGO2.png" type="image/x-icon">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,300,300italic,400italic,700,700italic" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
+    <script>
+        function showLoading() {
+            document.getElementById("loading").style.display = "block"; // Show the loading icon
+            document.getElementById("btn_save").disabled = true; // Disable the button to prevent multiple clicks
+        }
+
+        function submitForm(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            var formData = {
+                'nomatrik': $('input[name=nomatrik]').val(),
+                'idkegiatan': $('input[name=idkegiatan]').val(),
+            };
+
+            // Show loading indicator
+            showLoading();
+
+            // Send data to Google Sheets using Google Apps Script (AJAX request)
+            $.ajax({
+                url: 'https://script.google.com/macros/s/AKfycbyBDqfT3PFACO1xIUkVwQWolqh2VrWSZmeg44xcJ00250T0cpkjEJXmnIMq7nzZ0vc/exec', // Replace with your Apps Script URL
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    // Display success message
+                    document.getElementById("success-message").style.display = "block"; // Show success message
+                    document.getElementById("loading").style.display = "none"; // Hide loading indicator
+                    document.getElementById("btn_save").disabled = false; // Re-enable the button
+                    
+                    // Refresh the page after 2 seconds
+                    setTimeout(function() {
+                        location.reload(); // Reload the page
+                    }, 2000); // 2000ms = 2 seconds delay
+                },
+                error: function(xhr, status, error) {
+                    alert('Error occurred. Please try again.');
+                    location.reload();
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div align="center" class="logo-container">
+        <img src="assets/LOGO2.png" alt="logo" class="logo">
+    </div>
+    <div id="page-wrapper" class="imagebg">
+        <div class="main-page login-page">
+            <div class="widget-shadow">
+                <div class="login-top">
+                    <h3 class="title1">KEHADIRAN PERTANDINGAN INOVASI ANTARA ASASI MALAYSIA 2025 (OIITRAM2025)</h3>
+                </div>
+
+                <div class="login-body">
+                    <form onsubmit="submitForm(event)">
+                        <input type="hidden" name="idkegiatan" value="1406">
+
+                        <!-- No Matrik Label and Input -->
+                        <label class="control-label">No Matrik <span class="required">*</span></label>
+                        <input type="text" name="nomatrik" placeholder="No Matrik" required>
+
+                        <!-- Submit Button -->
+                        <input type="submit" id="btn_save" name="btn_save" value="Save">
+                    </form>
+                    
+                    <!-- Loading Indicator (hidden initially) -->
+                    <div class="loading" id="loading" style="display: none;">
+                        <img src="LOADING.gif" alt="Loading..." /> <!-- Your loading gif here -->
+                    </div>
+
+                    <!-- Success Message (hidden initially) -->
+                    <div id="success-message" style="display: none; color: green; font-weight: bold; margin-top: 20px;">
+                        KEHADIRAN ANDA TELAH DIREKOD
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>© 2025 Powered by Kelab Badminton SMASH, Universiti Pertahanan Nasional Malaysia</p>
+    </div>
+</body>
+</html>
